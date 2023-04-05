@@ -1,0 +1,116 @@
+definitions:
+    Product:
+        description: Product represents a product
+        properties:
+            description:
+                type: string
+                x-go-name: Description
+            id:
+                description: the id of this product
+                format: int64
+                minimum: 1
+                type: integer
+                x-go-name: ID
+            name:
+                type: string
+                x-go-name: Name
+            price:
+                format: float
+                type: number
+                x-go-name: Price
+            sku:
+                type: string
+                x-go-name: SKU
+        required:
+            - id
+        type: object
+        x-go-package: product-api/data
+info: {}
+paths:
+    /:
+        get:
+            description: Returns a list of products
+            operationId: getProducts
+            responses:
+                "200":
+                    $ref: '#/responses/productsResponse'
+            tags:
+                - products
+        post:
+            description: Send product or more to DB
+            operationId: postProducts
+            parameters:
+                - description: |-
+                    Product to send in system
+                    in: Body
+                  in: query
+                  items:
+                    $ref: '#/definitions/Product'
+                  name: body
+                  type: array
+                  x-go-name: Body
+            responses:
+                "201":
+                    $ref: '#/responses/noContent'
+            tags:
+                - products
+    /{id}:
+        delete:
+            description: Delete product by id
+            operationId: deleteProduct
+            parameters:
+                - description: |-
+                    The id of the product to delete from database
+                    in: Path
+                  format: int64
+                  in: query
+                  name: id
+                  required: true
+                  type: integer
+                  x-go-name: ID
+            responses:
+                "201":
+                    $ref: '#/responses/noContent'
+            tags:
+                - products
+        put:
+            description: Update product by id
+            operationId: putProduct
+            parameters:
+                - description: |-
+                    Product(s) to update in system
+                    in: Body
+                  in: query
+                  items:
+                    $ref: '#/definitions/Product'
+                  name: body
+                  type: array
+                  x-go-name: Body
+                - description: |-
+                    The id of the product to update
+                    in: Path
+                  format: int64
+                  in: query
+                  name: id
+                  required: true
+                  type: integer
+                  x-go-name: ID
+            responses:
+                "201":
+                    $ref: '#/responses/noContent'
+            tags:
+                - products
+responses:
+    noContent:
+        description: No content
+    productsResponse:
+        description: A list of products in the response
+        headers:
+            body:
+                description: |-
+                    All the products in the system
+                    in: Body
+                items:
+                    $ref: '#/definitions/Product'
+                type: array
+swagger: "2.0"
